@@ -1,5 +1,6 @@
 package unam.mx.login.data
 
+import android.content.Context
 import unam.mx.login.data.model.LoggedInUser
 
 /**
@@ -15,11 +16,13 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
     val isLoggedIn: Boolean
         get() = user != null
+    var tdataSource :LoginDataSource? = null;
 
     init {
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
         user = null
+        this.tdataSource = dataSource;
     }
 
     fun logout() {
@@ -27,9 +30,9 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(username: String, password: String, context: Context): Result<LoggedInUser> {
         // handle login
-        val result = dataSource.login(username, password)
+        val result = dataSource.login(username, password, context)
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)
